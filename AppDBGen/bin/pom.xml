@@ -30,7 +30,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>org.parsing.Main</mainClass> <!-- 여기에 main 클래스의 전체 이름을 적어주세요 -->
+                    <mainClass>org.example.Main</mainClass> <!-- 여기에 main 클래스의 전체 이름을 적어주세요 -->
                 </configuration>
             </plugin>
         </plugins>

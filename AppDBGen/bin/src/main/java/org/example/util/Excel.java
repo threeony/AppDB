@@ -33,10 +33,18 @@ public class Excel {
                     Cell cell = row.getCell(j);
                     if (cell != null) {
                         switch (cell.getCellType()) {
-                            case STRING -> data[i][j] = cell.getStringCellValue();
-                            case NUMERIC -> data[i][j] = String.valueOf(cell.getNumericCellValue());
-                            case BOOLEAN -> data[i][j] = String.valueOf(cell.getBooleanCellValue());
-                            default -> data[i][j] = "";
+                            case STRING:
+                                data[i][j] = cell.getStringCellValue();
+                                break;
+                            case NUMERIC:
+                                data[i][j] = String.valueOf(cell.getNumericCellValue());
+                                break;
+                            case BOOLEAN:
+                                data[i][j] = String.valueOf(cell.getBooleanCellValue());
+                                break;
+                            default:
+                                data[i][j] = "";
+                                break;
                         }
                     } else {
                         data[i][j] = ""; // 셀이 비어있을 경우 빈 문자열로 처리

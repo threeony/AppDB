@@ -18,16 +18,30 @@ public class OptionParser {
         List<String> configLines = Files.readAllLines(Paths.get("./config/config.txt"));
         for(String configLine: configLines){
             if(!configLine.startsWith("#")){
-                String[] option = configLine.split(":");
+                String[] option = configLine.split("=");
 
                 switch (option[0].strip().toLowerCase()){
-                    case "input" -> input = option[1].substring(option[1].indexOf("\""), option[1].lastIndexOf("\""));
-                    case "output" -> output = option[1].substring(option[1].indexOf("\""), option[1].lastIndexOf("\""));
-                    case "ignorehash" -> hashCheck = option[1].strip();
-                    case "new" -> opNew = option[1].strip();
-                    case "success" -> opSuccess = option[1].strip();
-                    case "fail" -> opFail = option[1].strip();
-                    case "gui" -> gui = option[1].strip();
+                    case "input":
+                        input = option[1].substring(option[1].indexOf("\""), option[1].lastIndexOf("\""));
+                        break;
+                    case "output":
+                        output = option[1].substring(option[1].indexOf("\""), option[1].lastIndexOf("\""));
+                        break;
+                    case "ignorehash":
+                        hashCheck = option[1].strip();
+                        break;
+                    case "new":
+                        opNew = option[1].strip();
+                        break;
+                    case "success":
+                        opSuccess = option[1].strip();
+                        break;
+                    case "fail":
+                        opFail = option[1].strip();
+                        break;
+                    case "gui":
+                        gui = option[1].strip();
+                        break;
                 }
             }
         }

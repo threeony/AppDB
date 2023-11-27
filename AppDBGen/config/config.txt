@@ -1,0 +1,16 @@
+#input file 위치
+input = "./input/snort_out.txt"
+
+#output folder
+output = "./output/"
+
+#실행 옵션
+##파싱
+ignoreHash = true
+##검증
+new = true
+success = true
+fail = true
+
+#GUI
+gui = false

@@ -23,7 +23,7 @@ public class Validation {
         this.folderPath=folderPath;
     }
 
-    void baseValidation(String option) {
+    public void baseValidation(String option) {
         System.out.println(folderPath);
         File[] files = excel.getFileList(folderPath);
         

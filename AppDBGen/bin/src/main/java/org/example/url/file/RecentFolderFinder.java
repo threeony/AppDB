@@ -2,6 +2,7 @@ package org.example.url.file;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,14 +15,15 @@ public class RecentFolderFinder {
         String today = dateFormat.format(currentDate);
         
         // 폴더 경로
-        String folderPath = outputFilePath + today;
+        String folderPath = outputFilePath;
 
         // 폴더 목록을 가져옴
         File folder = new File(folderPath);
         File[] folderList = folder.listFiles();
+        System.out.println(folderList);
 
         // 오늘 날짜 폴더를 제외한 폴더 목록을 만듦
-        List<File> filteredFolders = Arrays.asList(folderList);
+        List<File> filteredFolders = new ArrayList<>(Arrays.asList(folderList));
         filteredFolders.removeIf(f -> !f.isDirectory() || f.getName().equals(today));
 
         // 가장 최근 폴더를 찾음
@@ -37,7 +39,8 @@ public class RecentFolderFinder {
             return mostRecentFolder.getAbsolutePath();
         } else {
             System.out.println("이전에 작업한 폴더가 없습니다.");
-            return null;
+            String Error = "error";
+            return Error;
         }
     }
 }

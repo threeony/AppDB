@@ -229,13 +229,13 @@ public class mainGui {
                     // config.txt에 저장된 옵션값을 가져옵니다.
                     OptionParser op = new OptionParser();
                     logTextArea.setText("optionpaser 완료");
+                    logTextArea.setText(op.ExcelFilename);
                     String validationOp =  op.getOption();
                     
                     // 오늘날짜의 경로 지정
                     String newFolderPath = op.output + today +"/";
                     // 최근 폴더 선언
                     String RecentFolder = "";
-                    String ExcelFilename = op.ExcelFilename;
 
                     // HASH값 검증
                     boolean isSHA256Match = compareFileSHA256(op.input);
@@ -249,24 +249,23 @@ public class mainGui {
                             // validation.baseValidation(validationOp);
                         } else {
                             // 파싱 진행
-                            DataParser.parseAndSaveData(op.input, op.output,ExcelFilename);
-                            RecentFolder= RecentFolderFinder.FolderFinder(op.output);
+                            DataParser.parseAndSaveData(op.input, op.output);
+                            RecentFolder= RecentFolderFinder.FolderFinder(op.output) + "/";
                             logTextArea.append("새로운 파일이 생성되었습니다. New 체크를 진행합니다.\n");
 
                             // FileComparator 로직 추가
-                            FileComparator.compareExcelFiles(RecentFolder, newFolderPath, ExcelFilename);
+                            FileComparator.compareExcelFiles(RecentFolder, newFolderPath);
                             logTextArea.append("파싱 완료: " + newFolderPath + "\n");
                             logTextArea.append("New 체크 진행완료 했습니다.\n");
                             // 검증 진행
                             Validation validation = new Validation(newFolderPath);
                             validation.baseValidation(validationOp);
-                            //input 파일 이동
-                            FileCopyAndDelete.change_file_location(op.input, op.output);
+                            
                         }
                     } else {
                         logTextArea.append("SHA256 값이 다릅니다.\n");
                         // 파싱 진행
-                        DataParser.parseAndSaveData(op.input, op.output,ExcelFilename);
+                        DataParser.parseAndSaveData(op.input, op.output);
                         logTextArea.append("파싱 완료!\n");
                         // 검증 진행
                         Validation validation = new Validation(newFolderPath);
@@ -277,6 +276,8 @@ public class mainGui {
                     // title의 버전 날짜, SHA 값 수정
                     titleLabel.setText("<html>Title: APP DB<br/>최근 동작 날짜: " + readSHA256Info("Date") +
                                    "<br/>SHA-256:" + readSHA256Info("SHA256") + "</html>");
+                    //input 파일 이동
+                    FileCopyAndDelete.change_file_location(op.input, op.output);
 
                 } catch (IOException ex) {
                     logTextArea.setText("Error reading config.txt: " + ex.getMessage());

@@ -4,8 +4,10 @@ import java.io.*;
 
 public class CSV {
     public void toCSV(File filePath, String[][] arr) {
+        String path = filePath.getPath();
+        String csvFilePath = path.replace(".xlsx", ".csv");
         // CSV 파일 쓰기
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (FileWriter writer = new FileWriter(csvFilePath)) {
             for (String[] rowData : arr) {
                 // 한 행의 데이터를 CSV 형식으로 변환하여 파일에 쓰기
                 StringBuilder line = new StringBuilder();

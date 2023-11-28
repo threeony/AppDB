@@ -66,11 +66,11 @@ public class Main {
             }
 
             // 파싱 진행
-            DataParser.parseAndSaveData(op.input, op.output, ExcelFilename);
+            DataParser.parseAndSaveData(op.input, op.output);
             System.out.println("파싱 완료: " + newFolderPath);
 
             RecentFolder= RecentFolderFinder.FolderFinder(op.output);
-            FileComparator.compareExcelFiles(RecentFolder, newFolderPath, ExcelFilename);
+            FileComparator.compareExcelFiles(RecentFolder, newFolderPath);
             System.out.println("new 체크 완료.");
 
             System.out.println("검증을 시작합니다.");

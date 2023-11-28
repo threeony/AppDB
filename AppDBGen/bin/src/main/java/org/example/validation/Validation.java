@@ -87,7 +87,7 @@ public class Validation {
         for(i=1; i<arr.length; i++){
             arr[i][1] = LocalDate.now().toString();
             validation(arr);
-            System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
         }
     }
 
@@ -96,7 +96,7 @@ public class Validation {
             if(arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
@@ -106,7 +106,7 @@ public class Validation {
             if(arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
@@ -116,7 +116,7 @@ public class Validation {
             if(arr[i][2].equals("New")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+                System.out.print("Processing: " + String.format("%.3f", (float)i/arr.length) + "% \r");
             }
         }
     }
@@ -126,7 +126,7 @@ public class Validation {
             if(arr[i][2].equals("New") || arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
@@ -136,7 +136,7 @@ public class Validation {
             if(arr[i][2].equals("New") || arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
+                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }

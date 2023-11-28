@@ -24,9 +24,9 @@ public class Validation {
     }
 
     public void baseValidation(String option) {
-        System.out.println(folderPath);
+        //System.out.println(folderPath);
         File[] files = excel.getFileList(folderPath);
-        
+
         if (files == null) {
             System.out.println("파일 목록이 없거나 폴더를 읽을 수 없습니다.");
             return;
@@ -53,28 +53,36 @@ public class Validation {
 
             switch (option) {
                 case "new":
+                    System.out.println("검증옵션: new");
                     validateNew(dataArr);
                     break;
                 case "success":
+                    System.out.println("검증옵션: success");
                     validateSuccess(dataArr);
                     break;
                 case "fail":
+                    System.out.println("검증옵션: fail");
                     validateFail(dataArr);
                     break;
                 case "new+success":
+                    System.out.println("검증옵션: new + success");
                     validateNewSuccess(dataArr);
                     break;
                 case "new+fail":
+                    System.out.println("검증옵션: new = fail");
                     validateNewFail(dataArr);
                     break;
                 case "new+success+fail":
+                    System.out.println("검증옵션: all");
                     validateAll(dataArr);
                     break;
                 default:
                     System.out.println("잘못된 파싱 옵션입니다.");
+                    System.out.println("mvn exec:java -Dexec.args=\"help\"를 입력하여 도움말을 확인하실 수 있습니다.");
                     return;
             }
 
+            System.out.println("Processing: 100.000%");
             System.out.println("URL 검증 완료.");
             System.out.println(file + " | 성공: " + suc + "  실패: " + fail);
 
@@ -85,58 +93,58 @@ public class Validation {
 
     void validateAll(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length*100) + "% \r");
             arr[i][1] = LocalDate.now().toString();
             validation(arr);
-            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
         }
     }
 
     void validateSuccess(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length*100) + "% \r");
             if(arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
 
     void validateFail(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length*100) + "% \r");
             if(arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
 
     void validateNew(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f", (float)i/arr.length*100) + "% \r");
             if(arr[i][2].equals("New")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f", (float)i/arr.length) + "% \r");
             }
         }
     }
 
     void validateNewSuccess(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length*100) + "% \r");
             if(arr[i][2].equals("New") || arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
 
     void validateNewFail(String[][] arr){
         for(i=1; i<arr.length; i++){
+            System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length*100) + "% \r");
             if(arr[i][2].equals("New") || arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
-                System.out.print("Processing: " + String.format("%.3f",(float)i/arr.length) + "% \r");
             }
         }
     }
@@ -196,10 +204,36 @@ public class Validation {
                 }
                 connection.disconnect();
             } catch (Exception e) {
-                //그 외 모든 에러는 exception으로 처리하여 실패 처리 후 다음 url 진행
-                arr[i][3] = "실패";
+                //실패한 경우 https를 http로 변경하여 한 번 더 검증
                 arr[i][4] = e.toString();
-                fail++;
+
+                String http = arr[i][0];
+                http = http.replace("https://","http://");
+                arr[i][5] = http;
+
+                try {
+                    URL httpURL = new URL(http);
+                    HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
+                    con.setConnectTimeout(10000);
+                    con.setRequestMethod("GET");
+                    con.connect();
+
+                    int httpcode = con.getResponseCode();
+                    arr[i][6] = Integer.toString(httpcode);
+
+                    if (199 < httpcode && httpcode < 400) {
+                        arr[i][3] = "성공";
+                        suc++;
+                    } else {
+                        arr[i][3] = "실패";
+                        fail++;
+                    }
+                    con.disconnect();
+                } catch (Exception exception) {
+                    arr[i][3] = "실패";
+                    arr[i][6] = exception.toString();
+                    fail++;
+                }
             }
         });
 
@@ -211,12 +245,7 @@ public class Validation {
             if (requestThread.isAlive()) {
                 // 타임아웃 발생 시 스레드 종료
                 arr[i][3] = "실패";
-                if(arr[i][4].equals(null)){
-                    arr[i][4] = "timeout";
-                }
-                else{
-                    arr[i][6] = "timeout";
-                }
+                arr[i][6] = "timeout";
                 requestThread.interrupt();
             }
         } catch (InterruptedException e) {

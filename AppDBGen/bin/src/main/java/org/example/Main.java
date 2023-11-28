@@ -71,17 +71,19 @@ public class Main {
 
             RecentFolder= RecentFolderFinder.FolderFinder(op.output);
             FileComparator.compareExcelFiles(RecentFolder, newFolderPath);
-            System.out.println("new 체크 완료.");
+            System.out.println("new 체크 완료.\n");
 
             System.out.println("검증을 시작합니다.");
             // 검증 진행
             Validation validation = new Validation(newFolderPath);
             validation.baseValidation(validationOp);
-            //input 파일 이동
-            FileCopyAndDelete.change_file_location(op.input, op.output);
 
             // SHA 파일 업데이트
             SHA256Updater.updateSHA256AndDate(op.input,"Default_Snort_out_SHA256.txt");
+            //input 파일 이동
+            FileCopyAndDelete.change_file_location(op.input, op.output);
+
+            System.out.println("프로그램을 종료합니다.");
          }
     }
 

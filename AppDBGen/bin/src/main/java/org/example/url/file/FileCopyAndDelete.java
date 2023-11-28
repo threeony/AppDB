@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -33,7 +34,7 @@ public class FileCopyAndDelete {
         Path sourcePath = Paths.get(sourceFilePath);
         Path targetPath = Paths.get(targetFolderPath, sourcePath.getFileName().toString());
 
-        Files.copy(sourcePath, targetPath);
+        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     // 파일을 삭제하는 메서드

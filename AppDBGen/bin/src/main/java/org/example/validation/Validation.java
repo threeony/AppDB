@@ -38,6 +38,9 @@ public class Validation {
             if(file.toString().contains("snort_out")){
                 continue;
             }
+            if(file.toString().contains("ParsedData.csv")){
+                continue;
+            }
 
             // | url | Last Check | New | 성공/실패 | 응답코드/에러메시지 | 리다이렉트 경로 | 리다이렉트 응답코드/에러메시지 | 파싱 경로
             String[][] dataArr = excel.readExcel(file);
@@ -76,8 +79,7 @@ public class Validation {
             System.out.println(file + " | 성공: " + suc + "  실패: " + fail);
 
             excel.toExcel(file, dataArr);
-            String csvFilename = file.getPath().replace(".xlsx", ".csv");
-            csv.toCSV(new File(csvFilename), dataArr);
+            csv.toCSV(file, dataArr);
         }
     }
 
@@ -203,15 +205,18 @@ public class Validation {
             if (requestThread.isAlive()) {
                 // 타임아웃 발생 시 스레드 종료
                 arr[i][3] = "실패";
-                arr[i][6] = "timeout";
-
+                if(arr[i][4].equals(null)){
+                    arr[i][4] = "timeout";
+                }
+                else{
+                    arr[i][6] = "timeout";
+                }
                 requestThread.interrupt();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
     public int getSuccessCount() {
         return suc;
     }

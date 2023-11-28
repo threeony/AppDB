@@ -260,8 +260,7 @@ public class mainGui {
                             // 검증 진행
                             Validation validation = new Validation(newFolderPath);
                             validation.baseValidation(validationOp);
-                            //input 파일 이동
-                            FileCopyAndDelete.change_file_location(op.input, op.output);
+                            
                         }
                     } else {
                         logTextArea.append("SHA256 값이 다릅니다.\n");
@@ -277,6 +276,8 @@ public class mainGui {
                     // title의 버전 날짜, SHA 값 수정
                     titleLabel.setText("<html>Title: APP DB<br/>최근 동작 날짜: " + readSHA256Info("Date") +
                                    "<br/>SHA-256:" + readSHA256Info("SHA256") + "</html>");
+                    //input 파일 이동
+                    FileCopyAndDelete.change_file_location(op.input, op.output);
 
                 } catch (IOException ex) {
                     logTextArea.setText("Error reading config.txt: " + ex.getMessage());

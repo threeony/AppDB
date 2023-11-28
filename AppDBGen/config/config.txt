@@ -10,9 +10,9 @@ output = ../output/
 hashCheck = false
 
 #검증
-new = true
-success = true
-fail = true
+new = false
+success = false
+fail = fasle
 
 #GUI
 gui = true

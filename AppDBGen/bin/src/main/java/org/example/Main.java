@@ -24,13 +24,13 @@ public class Main {
         // newFilePath 설정 (실행하는 오늘 날짜 가져옴)
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        //help arguments
-        if(args.length == 1 && args[0].equals("-help")){
-            List<String> helpLines = Files.readAllLines(Paths.get("help.txt"));
-            for(String helpLine: helpLines){
-                System.out.println(helpLine);
-            }
-        }
+        // //help arguments
+        // if(args.length == 1 && args[0].equals("-help")){
+        //     List<String> helpLines = Files.readAllLines(Paths.get("help.txt"));
+        //     for(String helpLine: helpLines){
+        //         System.out.println(helpLine);
+        //     }
+        // }
 
         // config.txt에 저장된 옵션값을 가져옵니다.
         OptionParser op = new OptionParser();

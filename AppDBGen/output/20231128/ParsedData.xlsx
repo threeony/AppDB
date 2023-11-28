@@ -1,8 +1,0 @@
-URL,Last Check Date,New,Success/Failure,Response Code/Error,Redirection URL,Redirection Response/Error,Source Code Name,Pattern Name
-https://is.beneficium.de,2023-11-28,,실패,java.net.SocketTimeoutException: connect timed out,,,odp_payload_group_tmbg.lua,url_application host pattern
-https://dropdash.comiwsmt,2023-11-28,,실패,java.net.UnknownHostException: dropdash.comiwsmt,,,odp_payload_group_Primus.lua,url_application query pattern
-https://is1.anonmix.eu,2023-11-28,,실패,java.net.UnknownHostException: is1.anonmix.eu,,,odp_payload_group_tmbg.lua,url_application host pattern
-https://shop.history.combiography,2023-11-28,,실패,java.net.UnknownHostException: shop.history.combiography,,,odp_payload_group_Primus.lua,url_application query pattern
-https://mtvn.112.2o7.netcomedycentral,2023-11-28,,실패,java.net.UnknownHostException: mtvn.112.2o7.netcomedycentral,,,odp_payload_group_Primus.lua,url_application query pattern
-https://infoservice.inf.tu-dresden.de,2023-11-28,,실패,java.net.ConnectException: Connection refused: connect,,,odp_payload_group_tmbg.lua,url_application host pattern
-https://is2.anonmix.eu,2023-11-28,,실패,java.net.UnknownHostException: is2.anonmix.eu,,,odp_payload_group_tmbg.lua,url_application host pattern

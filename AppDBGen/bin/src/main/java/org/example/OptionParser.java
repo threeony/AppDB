@@ -25,11 +25,9 @@ public class OptionParser {
                 switch (option[0].strip().toLowerCase()){
                     case "input":
                         input = option[1].strip();
-                        validatePath(input, "Input path is invalid or does not exist: " + input);
                         break;
                     case "output":
                         output = option[1].strip();
-                        validatePath(output, "Output path is invalid or does not exist: " + output);
                         break;
                     case "hashcheck":
                         hashCheck = Boolean.parseBoolean(option[1].strip());
@@ -46,8 +44,6 @@ public class OptionParser {
                     case "gui":
                         gui = Boolean.parseBoolean(option[1].strip());
                         break;
-                    case "ExcelFilename":
-                        ExcelFilename = option[1].strip();
                 }
             }
         }

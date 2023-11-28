@@ -4,6 +4,7 @@ input = ../input/snort_out
 #output folder
 output = ../output/
 
+
 #실행 옵션
 #해시값이 동일할 경우, 파싱을 하지 않음
 hashCheck = false
@@ -16,5 +17,4 @@ fail = true
 #GUI
 gui = true
 
-#저장할 Excel의 값
-ExcelFilename = ParsedData.xlsx
+

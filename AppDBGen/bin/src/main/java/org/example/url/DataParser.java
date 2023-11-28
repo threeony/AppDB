@@ -19,14 +19,13 @@ public class DataParser {
 
     // 파일 경로를 인자로 받아 데이터를 파싱하고 엑셀 파일로 저장하는 함수
     // 매개변수로, input 경로, output 경로를 설정 필요
-    public static void parseAndSaveData(String inputfilePath, String outputFilePath, String ExcelFilename) throws IOException {
+    public static void parseAndSaveData(String inputfilePath, String outputFilePath) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(inputfilePath));
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Parsed Data");
         AtomicInteger rowNum = new AtomicInteger(1);
 
         createHeader(sheet); // 엑셀 파일의 헤더를 생성하는 함수 호출
-
         // 변수 선언 부분
         String line; // 파일에서 읽은 각 줄을 저장
         String currentSourceCodeName = ""; // 현재 소스 코드 이름
@@ -101,11 +100,11 @@ public class DataParser {
         }
 
         // 엑셀 파일을 저장
-        try (FileOutputStream outputStream = new FileOutputStream(savePath + ExcelFilename)) {
+        try (FileOutputStream outputStream = new FileOutputStream(savePath + "ParsedData.xlsx")) {
             workbook.write(outputStream);
         }
         workbook.close();
-
+        
         System.out.println("Processing completed.");
     }
 

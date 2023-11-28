@@ -6,7 +6,7 @@ output = ../output/
 
 #실행 옵션
 #해시값이 동일할 경우, 파싱을 하지 않음
-hashCheck = true
+hashCheck = false
 
 #검증
 new = true

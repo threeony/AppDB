@@ -258,8 +258,8 @@ public class mainGui {
                             logTextArea.append("파싱 완료: " + newFolderPath + "\n");
                             logTextArea.append("New 체크 진행완료 했습니다.\n");
                             // 검증 진행
-                            Validation validation = new Validation();
-                            validation.baseValidation(newFolderPath,validationOp,ExcelFilename);
+                            Validation validation = new Validation(newFolderPath);
+                            validation.baseValidation(validationOp);
                             //input 파일 이동
                             FileCopyAndDelete.change_file_location(op.input, op.output);
                         }
@@ -269,8 +269,8 @@ public class mainGui {
                         DataParser.parseAndSaveData(op.input, op.output,ExcelFilename);
                         logTextArea.append("파싱 완료!\n");
                         // 검증 진행
-                        Validation validation = new Validation();
-                        validation.baseValidation(newFolderPath,validationOp,ExcelFilename);
+                        Validation validation = new Validation(newFolderPath);
+                        validation.baseValidation(validationOp);
                     }
                     // SHA 파일 업데이트
                     SHA256Updater.updateSHA256AndDate(op.input,"Default_Snort_out_SHA256.txt");

@@ -85,7 +85,7 @@ public class DataParser {
 
         // 엑셀 파일 저장 경로 설정
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String savePath = "C:\\Temp\\Snort_Parsing\\" + today + "\\";
+        String savePath = "../output/" + today + "/";
 
         // 저장 경로가 없으면 생성
         File directory = new File(savePath);

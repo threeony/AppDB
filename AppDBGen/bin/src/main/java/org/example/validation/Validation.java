@@ -12,73 +12,61 @@ public class Validation {
     private int suc;
     private int fail;
     private int i;
-    private final String folderPath;
     private final Excel excel = new Excel();
     private final CSV csv = new CSV();
 
-    public Validation(String folderPath){
-        this.suc=0;
-        this.fail=0;
-        this.i=0;
-        this.folderPath=folderPath;
+    public Validation(){
+        this.suc = 0;
+        this.fail = 0;
+        this.i = 0;
     }
 
-    public void baseValidation(String option) {
-        System.out.println(folderPath);
-        File[] files = excel.getFileList(folderPath);
+
+    public void baseValidation(String newFolderPath, String ExcelFilename, String option) {
+        File file = new File(newFolderPath + ExcelFilename);
         
-        if (files == null) {
-            System.out.println("파일 목록이 없거나 폴더를 읽을 수 없습니다.");
+        if (!file.exists()) {
+            System.out.println(ExcelFilename + " 파일을 찾을 수 없습니다.");
             return;
         }
 
+        String[][] dataArr = excel.readExcel(file);
 
-        for (File file : files) {
+        if (dataArr == null || dataArr.length == 0) {
+            System.out.println(ExcelFilename + " | 데이터 없음.");
+            return;
+        }
 
-            if(file.toString().contains("MD5HashValues")){
-                continue;
-            }
-
-            // | url | Last Check | New | 성공/실패 | 응답코드/에러메시지 | 리다이렉트 경로 | 리다이렉트 응답코드/에러메시지 | 파싱 경로
-            String[][] dataArr = excel.readExcel(file);
-
-            if (dataArr == null || dataArr.length == 0) {
-                System.out.println(file + " | 데이터 없음.");
-                continue;
-            }
-
-
-            switch (option) {
-                case "new":
-                    validateNew(dataArr);
-                    break;
-                case "success":
-                    validateSuccess(dataArr);
-                    break;
-                case "fail":
-                    validateFail(dataArr);
-                    break;
-                case "new+success":
-                    validateNewSuccess(dataArr);
-                    break;
-                case "new+fail":
-                    validateNewFail(dataArr);
-                    break;
-                case "new+success+fail":
-                    validateAll(dataArr);
-                    break;
-                default:
-                    System.out.println("잘못된 옵션입니다.");
-                    return;
-            }
+        switch (option) {
+            case "new":
+                validateNew(dataArr);
+                break;
+            case "success":
+                validateSuccess(dataArr);
+                break;
+            case "fail":
+                validateFail(dataArr);
+                break;
+            case "new+success":
+                validateNewSuccess(dataArr);
+                break;
+            case "new+fail":
+                validateNewFail(dataArr);
+                break;
+            case "new+success+fail":
+                validateAll(dataArr);
+                break;
+            default:
+                System.out.println("파싱 옵션이 생략되어 있습니다.");
+                return;
+        }
 
             System.out.println("URL 검증 완료.");
             System.out.println(file + " | 성공: " + suc + "  실패: " + fail);
 
             excel.toExcel(file, dataArr);
-            csv.toCSV(file, dataArr);
+            csv.toCSV(new File(newFolderPath + ExcelFilename.replace(".xlsx", ".csv")), dataArr);
         }
-    }
 
     void validateAll(String[][] arr){
         for(i=1; i<arr.length; i++){

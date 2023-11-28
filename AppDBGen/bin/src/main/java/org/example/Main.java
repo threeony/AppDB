@@ -32,6 +32,7 @@ public class Main {
             for(String helpLine: helpLines){
                 System.out.println(helpLine);
             }
+            System.exit(0);
         }
 
         // config.txt에 저장된 옵션값을 가져옵니다.

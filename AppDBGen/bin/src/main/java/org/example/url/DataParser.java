@@ -62,19 +62,25 @@ public class DataParser {
                 continue;
             }
 
+            
             // 'pattern ='을 포함하는 줄을 찾을 경우 패턴 저장하는 로직
             if (line.contains("pattern =")) {
                 Matcher patternMatcher = patternRegex.matcher(line);
                 if (patternMatcher.find()) {
                     String pattern = patternMatcher.group(1).trim();
-                    currentPatternName = line.split("=")[0].trim(); // '=' 전까지의 값을 패턴 이름으로 저장
-                    if (!currentUrl.isEmpty() && currentUrl.endsWith("/") && pattern.startsWith("/")) {
-                        pattern = pattern.substring(1);
-                    }
+                    String potentialPatternName = line.split("=")[0].trim(); // '=' 전까지의 값을 패턴 이름으로 저장
+                    // URL에 이 패턴이 이미 포함되어 있지 않은지 확인
+                    if (!currentUrl.contains(pattern)) {
+                        if (!currentUrl.isEmpty() && currentUrl.endsWith("/") && pattern.startsWith("/")) {
+                            pattern = pattern.substring(1);
+                        }
                     currentUrl += pattern; // URL에 패턴을 추가
+                    // 새로운 패턴 이름 저장
+                    currentPatternName = potentialPatternName;
                 }
             }
         }
+    }
 
         // 추출된 URL과 소스코드 이름을 엑셀에 저장
         for (Map.Entry<String, String[]> entry : urlToSourceCodeMap.entrySet()) {

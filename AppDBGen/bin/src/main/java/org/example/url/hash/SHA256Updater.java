@@ -26,7 +26,7 @@ public class SHA256Updater {
         }
     }
 
-    private static String calculateSHA256(String filePath) throws IOException, NoSuchAlgorithmException {
+    public static String calculateSHA256(String filePath) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         try (InputStream fis = new FileInputStream(filePath)) {
             byte[] buffer = new byte[1024];

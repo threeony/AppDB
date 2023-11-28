@@ -10,7 +10,7 @@ import java.util.Date;
 // 만약 sha256FilePath 위치에 Skip을 호출 할 경우, 파일 업데이트는 생략합니다.
 
 public class SHA256Updater {
-
+ 
     public static String updateSHA256AndDate(String filePath, String sha256FilePath) {
         String result = "";
         if ("skip".equals(sha256FilePath)) {

@@ -3,11 +3,20 @@ package org.example;
 import javax.swing.*;
 // import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.example.url.hash.SHA256Updater;
+import org.example.url.DataParser;
+import org.example.validation.Validation;
+import org.example.url.FileComparator;
+import org.example.url.file.RecentFolderFinder;
+import org.example.url.file.FileCopyAndDelete;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 // import java.time.LocalDate;
 // import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 // import org.apache.poi.ss.usermodel.*;
 // import org.apache.poi.xssf.usermodel.*;
@@ -20,6 +29,8 @@ public class mainGui {
     }
 
     private void initComponents() {
+        // 오늘 날짜를 YYYYMMDD 양식으로 지정
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         // 기본으로 사용할 폰트 지정
         Font font = new Font("맑은 고딕", Font.BOLD, 12);
         // UIManager를 사용하여 JOptionPane의 폰트를 설정합니다.
@@ -39,7 +50,7 @@ public class mainGui {
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // 제목 및 버전 정보를 포함하는 라벨을 생성합니다.
-        JLabel titleLabel = new JLabel("<html>Title: APP DB<br/>버전 날짜: YYYYMMDD<br/>SHA-256:</html>", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("<html>Title: APP DB<br/>최근 동작 날짜: "+readSHA256Info("Date") +"<br/>SHA-256:"+readSHA256Info("SHA256")+"</html>", SwingConstants.CENTER);
         titleLabel.setVerticalAlignment(SwingConstants.TOP);
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
@@ -208,6 +219,71 @@ public class mainGui {
             }
         });
 
+        // "실행" 버튼을 눌렀을때 
+        executeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logTextArea.setText(""); // JTextArea를 클리어합니다.
+                logTextArea.setEditable(false); // JTextArea를 읽기 전용으로 설정합니다.
+                try {
+                    // config.txt에 저장된 옵션값을 가져옵니다.
+                    OptionParser op = new OptionParser();
+                    logTextArea.setText("optionpaser 완료");
+                    String validationOp =  op.getOption();
+                    
+                    // 오늘날짜의 경로 지정
+                    String newFolderPath = op.output + today +"/";
+                    // 최근 폴더 선언
+                    String RecentFolder = "";
+                    String ExcelFilename = op.ExcelFilename;
+
+                    // HASH값 검증
+                    boolean isSHA256Match = compareFileSHA256(op.input);
+                    logTextArea.setText("sha 해시 값 실행 완료");
+                    if (isSHA256Match) {
+                        logTextArea.append("SHA256 값이 일치합니다.\n");
+                        if (op.hashCheck){
+                            logTextArea.append("hackCheck 값이"+ op.hashCheck+ "으로 되어 있어 종료 하였습니다.");
+                            // // 검증 진행
+                            // Validation validation = new Validation(newFolderPath);
+                            // validation.baseValidation(validationOp);
+                        } else {
+                            // 파싱 진행
+                            DataParser.parseAndSaveData(op.input, op.output,ExcelFilename);
+                            RecentFolder= RecentFolderFinder.FolderFinder(op.output);
+                            logTextArea.append("새로운 파일이 생성되었습니다. New 체크를 진행합니다.\n");
+
+                            // FileComparator 로직 추가
+                            FileComparator.compareExcelFiles(RecentFolder, newFolderPath, ExcelFilename);
+                            logTextArea.append("파싱 완료: " + newFolderPath + "\n");
+                            logTextArea.append("New 체크 진행완료 했습니다.\n");
+                            // 검증 진행
+                            Validation validation = new Validation(newFolderPath,validationOp,ExcelFilename);
+                            //validation.baseValidation(validationOp,ExcelFilename);
+                            //input 파일 이동
+                            FileCopyAndDelete.change_file_location(op.input, op.output);
+                        }
+                    } else {
+                        logTextArea.append("SHA256 값이 다릅니다.\n");
+                        // 파싱 진행
+                        DataParser.parseAndSaveData(op.input, op.output,ExcelFilename);
+                        logTextArea.append("파싱 완료!\n");
+                        // 검증 진행
+                        Validation validation = new Validation(newFolderPath);
+                        validation.baseValidation(validationOp);
+                    }
+                    // SHA 파일 업데이트
+                    SHA256Updater.updateSHA256AndDate(op.input,"Default_Snort_out_SHA256.txt");
+                    // title의 버전 날짜, SHA 값 수정
+                    titleLabel.setText("<html>Title: APP DB<br/>최근 동작 날짜: " + readSHA256Info("Date") +
+                                   "<br/>SHA-256:" + readSHA256Info("SHA256") + "</html>");
+
+                } catch (IOException ex) {
+                    logTextArea.setText("Error reading config.txt: " + ex.getMessage());
+                }
+            }
+        });
+
 
         // "종료" 버튼의 이벤트 리스너를 추가합니다.
         exitButton.addActionListener(new ActionListener() {
@@ -230,5 +306,27 @@ public class mainGui {
         mainFrame.add(contentPanel);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
+    }
+
+    // SHA256 비교 메소드
+    private boolean compareFileSHA256(String uploadedFilePath) {
+        String existingSHA256 = readSHA256Info("SHA256");
+        String uploadedFileSHA256 = SHA256Updater.updateSHA256AndDate(uploadedFilePath,"skip");
+        return existingSHA256 != null && existingSHA256.equals(uploadedFileSHA256) && uploadedFileSHA256 != "error";
+    }
+    private String readSHA256Info(String key) {
+        File file = new File("Default_Snort_out_SHA256.txt"); // Assuming the file is in the project root directory
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith(key)) {
+                    return line.split(":")[1].trim();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error reading file: " + e.getMessage();
+        }
+        return null;
     }
 }

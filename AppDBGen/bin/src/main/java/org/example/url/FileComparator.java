@@ -14,7 +14,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class FileComparator {
-    public static void compareExcelFiles(String oldFilePath, String newFilePath) throws IOException {
+    public static void compareExcelFiles(String oldFilePath, String newFilePath, String ExcelFilename) throws IOException {
+        // 지금 경로는 뒤에 파일값이 생략된 경로임. 추가해야함
+        oldFilePath = oldFilePath + ExcelFilename;
+        newFilePath = newFilePath + ExcelFilename;
+        
         // 엑셀 파일을 읽기 위한 Workbook 객체 생성
         Workbook oldWorkbook = new XSSFWorkbook(new FileInputStream(oldFilePath));
         Workbook newWorkbook = new XSSFWorkbook(new FileInputStream(newFilePath));

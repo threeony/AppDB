@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
 public class DataParser {
 
     // 파일 경로를 인자로 받아 데이터를 파싱하고 엑셀 파일로 저장하는 함수
-    public static void parseAndSaveData(String filePath) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
-
+    // 매개변수로, input 경로, output 경로를 설정 필요
+    public static void parseAndSaveData(String inputfilePath, String outputFilePath, String ExcelFilename) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(inputfilePath));
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Parsed Data");
         AtomicInteger rowNum = new AtomicInteger(1);
@@ -69,18 +69,19 @@ public class DataParser {
                 if (patternMatcher.find()) {
                     String pattern = patternMatcher.group(1).trim();
                     String potentialPatternName = line.split("=")[0].trim(); // '=' 전까지의 값을 패턴 이름으로 저장
-                    // URL에 이 패턴이 이미 포함되어 있지 않은지 확인
-                    if (!currentUrl.contains(pattern)) {
+            
+                    // URL에 이 패턴이 이미 포함되어 있지 않고, 패턴 이름이 중복되지 않은 경우에만 추가
+                    if (!existingUrls.contains(pattern) && !potentialPatternName.equals(currentPatternName)) {
                         if (!currentUrl.isEmpty() && currentUrl.endsWith("/") && pattern.startsWith("/")) {
                             pattern = pattern.substring(1);
                         }
-                    currentUrl += pattern; // URL에 패턴을 추가
-                    // 새로운 패턴 이름 저장
-                    currentPatternName = potentialPatternName;
+                        currentUrl += pattern; // URL에 패턴을 추가
+                        existingUrls.add(pattern); // 처리된 URL에 패턴 추가
+                        currentPatternName = potentialPatternName; // 새로운 패턴 이름 저장
+                    }
                 }
             }
         }
-    }
 
         // 추출된 URL과 소스코드 이름을 엑셀에 저장
         for (Map.Entry<String, String[]> entry : urlToSourceCodeMap.entrySet()) {
@@ -91,7 +92,7 @@ public class DataParser {
 
         // 엑셀 파일 저장 경로 설정
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String savePath = "../output/" + today + "/";
+        String savePath = outputFilePath + today + "/";
 
         // 저장 경로가 없으면 생성
         File directory = new File(savePath);
@@ -100,7 +101,7 @@ public class DataParser {
         }
 
         // 엑셀 파일을 저장
-        try (FileOutputStream outputStream = new FileOutputStream(savePath + "ParsedData.xlsx")) {
+        try (FileOutputStream outputStream = new FileOutputStream(savePath + ExcelFilename)) {
             workbook.write(outputStream);
         }
         workbook.close();

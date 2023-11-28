@@ -71,7 +71,7 @@ public class Validation {
                     validateAll(dataArr);
                     break;
                 default:
-                    System.out.println("파싱 옵션이 생략되어있습니다.");
+                    System.out.println("잘못된 파싱 옵션입니다.");
                     return;
             }
 
@@ -87,6 +87,7 @@ public class Validation {
         for(i=1; i<arr.length; i++){
             arr[i][1] = LocalDate.now().toString();
             validation(arr);
+            System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
         }
     }
 
@@ -95,6 +96,7 @@ public class Validation {
             if(arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
+                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
             }
         }
     }
@@ -104,6 +106,7 @@ public class Validation {
             if(arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
+                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
             }
         }
     }
@@ -113,6 +116,7 @@ public class Validation {
             if(arr[i][2].equals("New")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
+                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
             }
         }
     }
@@ -122,6 +126,7 @@ public class Validation {
             if(arr[i][2].equals("New") || arr[i][3].equals("성공")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
+                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
             }
         }
     }
@@ -131,6 +136,7 @@ public class Validation {
             if(arr[i][2].equals("New") || arr[i][3].equals("실패")) {
                 arr[i][1] = LocalDate.now().toString();
                 validation(arr);
+                System.out.print("Processing: " + String.format("%.3f",i/arr.length) + "% \r");
             }
         }
     }

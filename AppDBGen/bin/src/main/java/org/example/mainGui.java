@@ -285,6 +285,43 @@ public class mainGui {
             }
         });
 
+        // "결과 확인" 버튼의 이벤트 리스너를 추가합니다.
+        resultButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    // 오늘날짜의 경로 지정
+                    OptionParser op = new OptionParser();
+                    String validationOp =  op.getOption();
+                    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+                    String Excelfilepath = op.output +"/"+ today +"/"+"ParsedData.xlsx";
+                    String csvfilepath = op.output +"/"+ today +"/"+"ParsedData.xlsx";
+                    // 실행하려는 파일의 경로를 설정합니다.
+                    File ExcelfileToOpen = new File(Excelfilepath);
+                    File csvfileToOpen = new File(csvfilepath);
+                    logTextArea.append("Excel 파일 경로: " + Excelfilepath+"\n");
+                    logTextArea.append("Excel 파일 존재 여부: " + ExcelfileToOpen.exists()+"\n");
+                    logTextArea.append("CSV 파일 경로: " + csvfilepath+"\n");
+                    logTextArea.append("CSV 파일 존재 여부: " + csvfileToOpen.exists()+"\n");
+                    // 데스크탑에서 파일을 엽니다.
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop desktop = Desktop.getDesktop();
+                        if (ExcelfileToOpen.exists()) {
+                            logTextArea.append("Excelopen\n");
+                            desktop.open(ExcelfileToOpen);
+                        }else if (csvfileToOpen.exists()){
+                            logTextArea.append("csvopen\n");
+                            desktop.open(csvfileToOpen);
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    // 오류 처리 (예: 오류 메시지를 사용자에게 표시)
+                }
+            }
+        });
 
         // "종료" 버튼의 이벤트 리스너를 추가합니다.
         exitButton.addActionListener(new ActionListener() {
